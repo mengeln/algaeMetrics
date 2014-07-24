@@ -15,7 +15,7 @@ dia.metrics <- function(data){
     
     x$propAchMin <- sum(x$propDiatoms[x$FinalID=="Achnanthidium minutissimum"], na.rm=T)
 
-    x_mh <- x[(!is.na(dia.df$Motility) & !is.na(dia.df$Habit)) ,]
+    x_mh <- x[(!is.na(x$Motility) & !is.na(x$Habit)) ,]
     x_mh_sum <- sum(x_mh$propDiatoms, na.rm=T)
     x$QC.sed.tol.PropValvesWithTraits <- x_mh_sum
     x$RAW.sed.tol.high <- sum(x_mh$propDiatoms[x_mh$Motility=="HM" | x_mh$Habit=="P"], na.rm=T)/
@@ -50,7 +50,7 @@ dia.metrics <- function(data){
     x_n <- x[!is.na(x$NitrogenUptakeMetabolism),]
     x_n_sum <- sum(x_n$propDiatoms, na.rm=T)
     x$QC.N.het.PropValvesWithTraits <- x_n_sum
-    x$RAW.N.het <- sum(x_n$propDiatoms[x_e$NitrogenUptakeMetabolism %in% c("NHHONF","NHHONO")], na.rm=T)/
+    x$RAW.N.het <- sum(x_n$propDiatoms[x_n$NitrogenUptakeMetabolism %in% c("NHHONF","NHHONO")], na.rm=T)/
       x_n_sum
     
     x_i <- x[!is.na(x$IndicatorClass_TP),]
