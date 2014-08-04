@@ -21,8 +21,8 @@ D18 <- function(data, all=FALSE){
 }
 
 calcD18 <- function(metrics, all=FALSE){
-  metrics$D18 <- 10*rowMeans(metrics[,c("SCALED.sed.tol.high","SCALED.low.P",
-                                        "SCALED.N.het","SCALED.DO.50","SCALED.halo")])
+  metrics$D18 <- round(10*rowMeans(metrics[,c("SCALED.sed.tol.high","SCALED.low.P",
+                                        "SCALED.N.het","SCALED.DO.50","SCALED.halo")]))
   
   metrics$D18.QCmin<-  apply(metrics[,c("QC.sed.tol.PropValvesWithTraits",
                                         "QC.Ptrait.PropValvesWithTraits",

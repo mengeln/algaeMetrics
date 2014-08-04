@@ -21,9 +21,9 @@ S2 <- function(data, all=FALSE){
 }
 
 calcS2 <- function(metrics, all=FALSE){
-  metrics$S2 <- 10*rowMeans(metrics[, c("SCALED.propGreenCRUS","SCALED.meanZHR",
+  metrics$S2 <- round(10*rowMeans(metrics[, c("SCALED.propGreenCRUS","SCALED.meanZHR",
                                         "SCALED.high.Cu.sp","SCALED.high.DOC.sp",
-                                        "SCALED.low.TP.sp","SCALED.nonref.sp")])
+                                        "SCALED.low.TP.sp","SCALED.nonref.sp")]))
   metrics$S2.QCmin <- apply(metrics[,c("propBiovolChlor.QC.propBiovolWithTraits",
                                        "propBiovolChlor.QC.propBiovolWithTraits",
                                        "propBiovolZHR.QC.propBiovolWithTraits",

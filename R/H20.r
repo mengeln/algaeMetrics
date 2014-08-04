@@ -22,10 +22,10 @@ H20 <- function(data, all=FALSE){
 }
 
 calcH20 <- function(metrics, all=FALSE){
-  metrics$H20 <- 10 * rowMeans(metrics[,c("SCALED.sed.tol.high", "SCALED.low.N",
+  metrics$H20 <- round(10 * rowMeans(metrics[,c("SCALED.sed.tol.high", "SCALED.low.N",
                                           "SCALED.N.het","SCALED.DO.50",
                                           "SCALED.halo","SCALED.high.Cu.sp",
-                                          "SCALED.high.DOC.sp","SCALED.low.TP.sp")])
+                                          "SCALED.high.DOC.sp","SCALED.low.TP.sp")]))
   metrics$H20.QCmin <- apply(metrics[,c("QC.sed.tol.PropValvesWithTraits",
                                         "QC.Ptrait.PropValvesWithTraits",
                                         "QC.N.het.PropValvesWithTraits",
