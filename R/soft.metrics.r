@@ -3,8 +3,27 @@
 soft.metrics <- function(data){
   soft.df <- subset(data, AlgaeGroup=="SoftAlgae" & SampleTypeCode!="Integrated")
   
-  if(nrow(soft.df) == 0)
-    return(data.frame())
+  if(nrow(soft.df) == 0){
+    ids <- unique(data[, c("SampleID", "StationCode","SampleDate","Replicate")])
+    blankframe <- cbind(ids, matrix(rep(NA, nrow(ids)*44), nrow=nrow(ids)))
+    names(blankframe)[5:48] <- c("high.DOC.b.RAW", 
+                                 "high.DOC.b.QC.propBiovolWithTraits", "high.DOC.b.QC.propTaxaWithTraits", 
+                                 "nonref.b.RAW", "nonref.b.QC.propBiovolWithTraits", "nonref.b.QC.propTaxaWithTraits", 
+                                 "propBiovolChlor.RAW", "propBiovolChlor.QC.propBiovolWithTraits", 
+                                 "propBiovolChlor.QC.propTaxaWithTraits", "high.Cu.sp.RAW", "high.Cu.sp.QC.propBiovolWithTraits", 
+                                 "high.Cu.sp.QC.propTaxaWithTraits", "high.DOC.sp.RAW", "high.DOC.sp.QC.propBiovolWithTraits", 
+                                 "high.DOC.sp.QC.propTaxaWithTraits", "nonref.sp.RAW", "nonref.sp.QC.propBiovolWithTraits", 
+                                 "nonref.sp.QC.propTaxaWithTraits", "low.TP.sp.RAW", "low.TP.sp.QC.propBiovolWithTraits", 
+                                 "low.TP.sp.QC.propTaxaWithTraits", "propBiovolZHR.RAW", "propBiovolZHR.QC.propBiovolWithTraits", 
+                                 "propBiovolZHR.QC.propTaxaWithTraits", "propTaxaZHR.sp.RAW", 
+                                 "meanZHR.RAW", "totalBiovolGreen.RAW", "totalBiovolCRUS.RAW", 
+                                 "propGreenCRUS.RAW", "totalBiovolCRUS.QC.propBiovolWithTraits", 
+                                 "totalBiovolCRUS.QC.propTaxaWithTraits", "types", "Qual", "EntityCount", 
+                                 "SCALED.high.Cu.sp", "SCALED.high.DOC.sp", "SCALED.low.TP.sp", 
+                                 "SCALED.meanZHR", "SCALED.nonref.sp", "SCALED.high.DOC.b", "SCALED.nonref.b", 
+                                 "SCALED.propBiovolZHR", "SCALED.propBiovolChlor", "SCALED.propGreenCRUS")
+    return(blankframe)
+  }
   
   soft.df <- ddply(soft.df,.(SampleID, StationCode, SampleDate, Replicate), function(x){
     
@@ -109,7 +128,7 @@ soft.metrics <- function(data){
   
   soft.df$SCALED.propGreenCRUS <- (10:0)[cut(soft.df$propGreenCRUS.RAW, c(0, 0.001, 0.111, 0.222, 0.333, 0.444, 0.555, 0.667, 0.778, 0.889, 
                                                                               1, Inf), right=FALSE)]
-  
+
   soft.df
 }
 

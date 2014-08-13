@@ -47,19 +47,25 @@
 algae.IBIs <- function(data, metadata = NULL){
   
   processed <- taxonInfo(validator(data), metadata)
-  
   metrics <- alg.metrics(processed$cleanData)
+
   fun <- function(f,d)f(d)
   ibis <- lapply(c(calcS2, calcD18, calcH20), fun, metrics)
   report <- Reduce(merge, ibis)
   
   metrics$DiatomSamplePresent <- ifelse(is.na(metrics$totalDiatomCount) | metrics$totalDiatomCount == 0, "No", "Yes")
-  metrics$SoftAlgaeSampleTypesPresent <- metrics$types
-  metrics$QualPresent <- metrics$Qual
+  metrics$types[is.na(metrics$types)] <- ""
+  metrics$Qual[is.na(metrics$Qual)] <- "No"
+
+  metrics <- rename(metrics, c("types"= "SoftAlgaeSampleTypesPresent", "Qual"="QualPresent"))
   metrics$DiatomCountFlag <- ifelse(is.na(metrics$totalDiatomCount) | metrics$totalDiatomCount < 450,
                                    "Inadequate","Adequate")
   metrics$SoftAlgaeEntityCountFlag <- ifelse(is.na(metrics$EntityCount), "Data missing", 
                                             ifelse(metrics$EntityCount < 225,"Inadequate","Adequate"))
   
-  Reduce(merge, list(report, metrics, processed$purged))
+  results <- Reduce(merge, list(report, metrics, processed$purged))
+  subset(results, select=c(SampleID, StationCode:Replicate, S2:H20.QCmin, SoftAlgaeSampleTypesPresent,
+                          QualPresent, DiatomSamplePresent, totalDiatomCount, EntityCount,
+                          DiatomCountFlag:purgedTaxa, propAchMin:totalBiovolCRUS.QC.propTaxaWithTraits,
+                          SCALED.high.Cu.sp:SCALED.propGreenCRUS))
 }

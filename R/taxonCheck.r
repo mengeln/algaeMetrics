@@ -33,7 +33,8 @@ taxonInfo <- function(data, algaeMetaData = NULL){
   
   npurged <- ddply(data, .(SampleID), function(x){
     data.frame(SampleID = unique(x$SampleID),
-               PurgedTaxa = sum(x$FinalID %in% missing.taxa))
+               numberPurged = sum(x$FinalID %in% missing.taxa),
+               purgedTaxa = paste0(x$FinalID[x$FinalID %in% missing.taxa], collapse=", "))
   })
 
   sumtable <- data.frame(FinalID = unique(data$FinalID))

@@ -2,8 +2,21 @@
 dia.metrics <- function(data){
   dia.df <- subset(data, AlgaeGroup=="Diatom" & SampleTypeCode=="Integrated")
   
-  if(nrow(dia.df) == 0)
-    return(data.frame())
+  if(nrow(dia.df) == 0){
+    ids <- unique(data[, c("SampleID", "StationCode","SampleDate","Replicate")])
+    blankframe <- cbind(ids, matrix(rep(NA, nrow(ids)*32), nrow=nrow(ids)))
+    names(blankframe)[5:36] <- c("totalDiatomCount", 
+                                   "propAchMin", "QC.sed.tol.PropValvesWithTraits", "RAW.sed.tol.high", 
+                                   "QC.halo.PropValvesWithTraits", "RAW.halo", "QC.saprobity.PropValvesWithTraits", 
+                                   "RAW.sapro", "QC.DO.PropValvesWithTraits", "RAW.DO.50", "RAW.DO.100", 
+                                   "QC.TrophicState.PropValvesWithTraits", "RAW.eutro", "QC.N.het.PropValvesWithTraits", 
+                                   "RAW.N.het", "QC.Ptrait.PropValvesWithTraits", "RAW.low.P", "QC.Ntrait.PropValvesWithTraits", 
+                                   "RAW.low.N", "QC.Motility.PropValvesWithTraits", "RAW.highly.mot", 
+                                   "SCALED.AchMin", "SCALED.sed.tol.high", "SCALED.halo", "SCALED.sapro", 
+                                   "SCALED.DO.50", "SCALED.DO.100", "SCALED.eutro", "SCALED.N.het", 
+                                   "SCALED.low.P", "SCALED.low.N", "SCALED.highly.mot")
+    return(blankframe)
+  }
   
   dia.df <- ddply(dia.df,.(SampleID, StationCode, SampleDate, Replicate), function(x){
    
@@ -72,7 +85,6 @@ dia.metrics <- function(data){
     x
   })
 
-  
   dia.df <- unique(dia.df[, c("SampleID", "StationCode","SampleDate","Replicate", "totalDiatomCount",
                               "propAchMin",
                               "QC.sed.tol.PropValvesWithTraits","RAW.sed.tol.high",
@@ -85,7 +97,8 @@ dia.metrics <- function(data){
                               "RAW.low.P","QC.Ntrait.PropValvesWithTraits",
                               "RAW.low.N","QC.Motility.PropValvesWithTraits", 
                               "RAW.highly.mot")])
-  
+
+
   # Score metrics
   dia.df$SCALED.AchMin <- (0:10)[cut(dia.df$propAchMin, c(-Inf, 0, 0.034, 0.068, 0.102, 0.136, 0.170, 0.204,
                                           0.239, 0.273, 0.307, Inf))]
@@ -119,7 +132,6 @@ dia.metrics <- function(data){
   
   dia.df$SCALED.highly.mot <- (10:0)[cut(dia.df$RAW.highly.mot, c(0, 0.023, 0.066, 0.110, 0.154, 0.197, 0.241, 0.285, 0.328,  0.372, 
                       0.416, Inf), right=FALSE)]
-
   dia.df
 }
 
