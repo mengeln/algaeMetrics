@@ -91,7 +91,7 @@ soft.metrics <- function(data){
     
     metrics$types <- paste0(sort(unique(x$SampleTypeCode)), collapse="_")
     metrics$Qual <- ifelse("Qualitative" %in% x$SampleTypeCode,"Yes","No")
-    metrics$EntityCount <- ifelse("ActualOrganismCount" %in% names(x),
+    metrics$EntityCount <- ifelse(!all(is.na(x$ActualOrganismCount)),
                                   max(x$ActualOrganismCount, na.rm=T), NA)
     
     

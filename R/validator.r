@@ -18,9 +18,17 @@ validator <- function(data){
   coltest <- required.fields %in% names(data)
   if(!all(coltest))
     stop(do.call(paste, as.list(c("Missing the following columns:", required.fields[!coltest]))))
-  else{
-    if(!is.null(data$SampleID))
-      required.fields <- c("SampleID", required.fields)
-    data[, required.fields] 
-  } 
+  
+  if(!is.null(data$SampleID))
+      required.fields <- c("SampleID", required.fields) 
+  
+  numCheck <- sapply(data, is.numeric)[c("BAResult", "Result")]
+  if(any(!numCheck))
+    stop(do.call(paste, as.list(c("The following fields must be numeric:", names(numCheck)[!numCheck]))))
+  
+  codeCheck <- data$SampleTypeCode %in% c("Integrated", "Microalgae", "Macroalgae", "Epiphyte", "Qualitative")
+  if(any(!codeCheck))
+    stop(do.call(paste, as.list(c("Unrecognized SampleTypeCode:", unique(data$SampleTypeCode[!codeCheck])))))
+  
+  data[, required.fields]  
 }
